@@ -2,4 +2,15 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  div
+      div
+        div
+          block sidebar
+            ul
+              li
+                a(href='/') Home
+              each category in categories
+                li
+                  a(href=category.url)= category.name
+
+
