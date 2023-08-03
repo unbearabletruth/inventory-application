@@ -12,7 +12,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 });
 
 exports.items_list = asyncHandler(async (req, res, next) => {
-    const items = await Item.find({ category: req.params.id }, 'name').exec()
+    const items = await Item.find({ category: req.params.id }).exec()
     res.render("items_list", {
       title: "All CPUs",
       items: items

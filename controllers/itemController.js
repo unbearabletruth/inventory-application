@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 
 exports.item_details = asyncHandler(async (req, res, next) => {
     console.log(req.params)
-    const item = await Item.findById(req.params.id).exec()
+    const item = await Item.findById(req.params.itemId).exec()
     res.render("item_details", {
       item: item
     });
