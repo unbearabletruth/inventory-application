@@ -24,7 +24,7 @@ exports.items_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.category_create_get = (req, res, next) => {
-  res.render("category_create", { title: "Create category" });
+  res.render("category_form", { title: "Create category" });
 };
 
 exports.category_create_post = [
@@ -99,3 +99,44 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
     res.redirect("/");
   }
 });
+
+exports.category_update_get = asyncHandler(async (req, res, next) => {
+  const category = await Category.findById(req.params.id).exec()
+  res.render("category_form", { 
+    title: "Update category",
+    category: category
+  });
+});
+
+exports.category_update_post = [
+  body("name", "Category name must contain at least 3 characters")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("description", "Category description must contain at least 8 characters")
+    .trim()
+    .isLength({ min: 8 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Update category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await Category.findByIdAndUpdate(req.params.id, category, {});
+      res.redirect(category.url);
+    }
+  }),
+];

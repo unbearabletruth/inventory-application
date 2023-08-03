@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1= title
+  h2= category.description
   div
       div
         div
@@ -13,4 +14,7 @@ block content
   li
     a(href='/') Home
   hr
-  a(href=category.url+'/delete') Delete category
+  li
+    a(href=category.url+'/delete') Delete category
+  li
+    a(href=category.url+'/update') Update category
