@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1 #{title}
+
+  if items.length
+
+    p #[strong You have to delete all category items first.]
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4 Items
+
+      dl
+      each item in items
+        dt
+          a(href=item.url) #{item.name}
+
+  else
+    p Do you really want to delete this category?
+
+    form(method='POST' action='')
+      div
+        input(type='hidden', name='categoryid', required='true', value=category._id )
+
+      button(type='submit') Delete
