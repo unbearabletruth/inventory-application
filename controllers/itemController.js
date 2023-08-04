@@ -72,3 +72,18 @@ exports.item_create_post = [
     }
   }),
 ];
+
+exports.item_delete_get = asyncHandler(async (req, res, next) => {
+  const item = await Item.findById(req.params.itemId).exec();
+  if (item === null) {
+    res.redirect(`/category/${req.params.id}`);
+  }
+  res.render("item_delete", {
+    item: item
+  });
+});
+
+exports.item_delete_post = asyncHandler(async (req, res, next) => {
+  await Item.findByIdAndRemove(req.params.itemId);
+  res.redirect(`/category/${req.params.id}`);
+});
