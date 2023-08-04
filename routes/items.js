@@ -11,9 +11,9 @@ router.get("/item/:itemId/delete", item_controller.item_delete_get);
 
 router.post("/item/:itemId/delete", item_controller.item_delete_post);
 
-//router.get("/item/:itemId/update", item_controller.item_update_get);
+router.get("/item/:itemId/update", item_controller.item_update_get);
 
-//router.post("/item/:itemId/update", item_controller.item_update_post);
+router.post("/item/:itemId/update", item_controller.item_update_post);
 
 router.get('/item/:itemId', item_controller.item_details)
 
