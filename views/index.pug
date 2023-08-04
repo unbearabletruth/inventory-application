@@ -6,14 +6,12 @@ block content
       div
         div
           block sidebar
+            a(href='/') Home
             ul
-              li
-                a(href='/') Home
               each category in categories
                 li
                   a(href=category.url)= category.name
               hr
-              li
-                a(href='/category/create') Create new category
+              a(href='/category/create') Add new category
 
 

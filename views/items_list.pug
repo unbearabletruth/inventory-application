@@ -3,6 +3,7 @@ extends layout
 block content
   h1= title
   h2= category.description
+  a(href=category.url+'/item/create') Create new item in this category
   div
       div
         div
@@ -11,8 +12,8 @@ block content
               each item in items
                 li
                   a(href=item.url)= item.name
-  li
-    a(href='/') Home
+
+  a(href='/') Home
   hr
   li
     a(href=category.url+'/delete') Delete category
