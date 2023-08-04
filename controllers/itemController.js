@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
 exports.item_details = asyncHandler(async (req, res, next) => {
-    const item = await Item.findById(req.params.itemId).exec()
+    const item = await Item.findById(req.params.itemId).populate('category').exec()
     if (item === null) {
       const err = new Error("Item not found");
       err.status = 404;

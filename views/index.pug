@@ -3,15 +3,13 @@ extends layout
 block content
   h1= title
   div
-      div
-        div
-          block sidebar
-            a(href='/') Home
-            ul
-              each category in categories
-                li
-                  a(href=category.url)= category.name
-              hr
-              a(href='/category/create') Add new category
+    block sidebar
+      a(href='/') Home
+      ul
+        each category in categories
+          li
+            a(href=category.url)= category.name
+  hr
+  a(href='/category/create') Add new category
 
 

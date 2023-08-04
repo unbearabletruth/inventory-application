@@ -12,10 +12,9 @@ block content
               each item in items
                 li
                   a(href=item.url)= item.name
-
-  a(href='/') Home
-  hr
-  li
+  p                
     a(href=category.url+'/delete') Delete category
-  li
+  p
     a(href=category.url+'/update') Update category
+  hr
+  a(href='/') Home
