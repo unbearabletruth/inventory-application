@@ -6,6 +6,8 @@ block content
   p Main characteristics: #{item.description} 
   p Price: $#{item.price} 
   p Available(Qty: #{item.number_in_stock})
+  if (item.image)
+    img(src=`http://localhost:3000/images/${item.image.get('filename')}` alt='item image')
   p
     a(href=item.url+'/delete') Delete item
   p

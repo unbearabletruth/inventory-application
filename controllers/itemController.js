@@ -4,14 +4,15 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 
 exports.item_details = asyncHandler(async (req, res, next) => {
-    const item = await Item.findById(req.params.itemId).populate('category').exec()
+    const item = await Item.findById(req.params.itemId).populate('category').exec()//causes wrong path
     if (item === null) {
       const err = new Error("Item not found");
       err.status = 404;
       return next(err);
     }
+    console.log(item.image.get('filename'))
     res.render("item_details", {
-      item: item
+      item: item,
     });
 });
 
@@ -54,7 +55,8 @@ exports.item_create_post = [
       description: req.body.description,
       category: req.body.category,
       price: req.body.price,
-      number_in_stock: req.body.number_in_stock
+      number_in_stock: req.body.number_in_stock,
+      image: req.file
     });
 
     if (!errors.isEmpty()) {
