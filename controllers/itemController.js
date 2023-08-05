@@ -146,14 +146,18 @@ exports.item_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-
+    let url;
+    if (req.file){
+      url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    }
+    
     const item = new Item({
       name: req.body.name,
       description: req.body.description,
       category: req.body.category,
       price: req.body.price,
       number_in_stock: req.body.number_in_stock,
-      imageUrl: req.body.imageUrl,
+      imageUrl: req.file ? url : req.body.imageUrl,
       _id: req.params.itemId
     });
 
