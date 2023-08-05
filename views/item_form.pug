@@ -24,6 +24,8 @@ block content
       input(type='number', name='number_in_stock' value=(undefined===item ? '' : item.number_in_stock))
       label(for='image') Number in stock:
       input(type="file"  name="image")
+      if (item && item.imageUrl)
+        img(src=item.imageUrl alt='item image')
     button(type='submit') Submit
 
   if errors

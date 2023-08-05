@@ -2,15 +2,16 @@ const Item = require("../models/item");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const fs = require('fs')
+const path = require('path');
 
 exports.item_details = asyncHandler(async (req, res, next) => {
-    const item = await Item.findById(req.params.itemId).populate('category').exec()//causes wrong path
+    const item = await Item.findById(req.params.itemId).exec()//causes wrong path
     if (item === null) {
       const err = new Error("Item not found");
       err.status = 404;
       return next(err);
     }
-    console.log(item.image.get('filename'))
     res.render("item_details", {
       item: item,
     });
@@ -49,6 +50,7 @@ exports.item_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
     const item = new Item({
       name: req.body.name,
@@ -56,7 +58,7 @@ exports.item_create_post = [
       category: req.body.category,
       price: req.body.price,
       number_in_stock: req.body.number_in_stock,
-      image: req.file
+      imageUrl: url
     });
 
     if (!errors.isEmpty()) {
@@ -91,7 +93,15 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-  await Item.findByIdAndRemove(req.params.itemId);
+  const item = await Item.findById(req.params.itemId).exec();
+  await Item.findByIdAndRemove(item._id);
+  const filepath = `./public/images/${path.basename(item.imageUrl)}`
+  fs.unlink(filepath, (err) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+  })
   res.redirect(`/category/${req.params.id}`);
 });
 
@@ -143,6 +153,7 @@ exports.item_update_post = [
       category: req.body.category,
       price: req.body.price,
       number_in_stock: req.body.number_in_stock,
+      imageUrl: req.body.imageUrl,
       _id: req.params.itemId
     });
 
