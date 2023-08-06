@@ -6,7 +6,10 @@ const fs = require('fs')
 const path = require('path');
 
 exports.item_details = asyncHandler(async (req, res, next) => {
-    const item = await Item.findById(req.params.itemId).exec()//causes wrong path
+    const [item, category] = await Promise.all([
+      Item.findById(req.params.itemId).exec(),
+      Category.findById(req.params.id).exec(),
+    ]) 
     if (item === null) {
       const err = new Error("Item not found");
       err.status = 404;
@@ -14,6 +17,7 @@ exports.item_details = asyncHandler(async (req, res, next) => {
     }
     res.render("item_details", {
       item: item,
+      category: category
     });
 });
 

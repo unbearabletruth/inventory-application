@@ -10,7 +10,7 @@ block content
       label(for='description') Description:
       input(type='text', name='description' value=(undefined===category ? '' : category.description))
     button(type='submit') Submit
-
+  a(href='/') Back to Home
   if errors
    ul
     for error in errors

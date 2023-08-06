@@ -27,7 +27,9 @@ block content
       if (item && item.imageUrl)
         img(src=item.imageUrl alt='item image')
     button(type='submit') Submit
-
+  for category in categories 
+    if (item.url.includes(category._id))
+      a(href=category.url) Back to #{category.name} category
   if errors
    ul
     for error in errors
