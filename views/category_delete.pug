@@ -15,9 +15,11 @@ block content
       each item in items
         dt
           a(href=item.url) #{item.name}
-
+    hr
+    a(href=category.url) Back to #{category.name} category
   else
     p Do you really want to delete this category?
 
     form(method='POST' action='')
       button(type='submit') Delete
+      a(href=category.url) Cancel
