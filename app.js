@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+require('dotenv').config()
+
 
 const categoryRouter = require('./routes/categories');
 
@@ -10,7 +12,7 @@ const app = express();
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb://127.0.0.1:27017/inventory-application";
+const mongoDB = process.env.DB_LINK;
 
 main().catch((err) => console.log(err));
 async function main() {
