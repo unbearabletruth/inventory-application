@@ -12,10 +12,10 @@ block content
       label(for='category') Category:
       select(type='select', name='category' placeholder='Select category' value=(undefined===item ? '' : item.category))
         for category in categories
-          if item
+          if current_category
+              option(value=category._id selected=(category._id.toString()===current_category.toString() ? 'selected' : false) ) #{category.name}
+          else if item
             option(value=category._id selected=(category._id.toString()===item.category._id.toString() ? 'selected' : false) ) #{category.name}
-          else if current_category
-            option(value=category._id selected=(category._id.toString()===current_category.toString() ? 'selected' : false) ) #{category.name}
           else
             option(value=category._id) #{category.name}
       label(for='price') price:
@@ -27,13 +27,17 @@ block content
       if (item && item.imageUrl)
         img(src=item.imageUrl alt='item image')
     button(type='submit') Submit
-  if (item)
-    a(href=item.url) Back to #{item.name} 
-  else if (current_category)
+  
+  if (current_category)
     for category in categories 
       if (current_category.toString() === category._id.toString())
         a(href=category.url) Back to #{category.name} category
-  if errors
+  else if (item)
+    a(href=item.url) Back to #{item.name} 
+  if errors || fileError
    ul
+    li= fileError
     for error in errors
-     li!= error.msg
+      li!= error.msg
+
+    

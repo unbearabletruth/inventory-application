@@ -1,5 +1,6 @@
 const Item = require("../models/item");
 const Category = require("../models/category");
+const fileValidation = require('./fileValidation');
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const fs = require('fs')
@@ -54,7 +55,11 @@ exports.item_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    let url, fileError;
+    if (req.file){
+      url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      fileError = fileValidation.auth(req)
+    }
 
     const item = new Item({
       name: req.body.name,
@@ -65,14 +70,23 @@ exports.item_create_post = [
       imageUrl: url
     });
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() || fileError) {
       const categories = await Category.find().exec()
       res.render("item_form", {
         title: "Create item",
         categories: categories,
         item: item,
+        current_category: req.params.id,
         errors: errors.array(),
+        fileError: fileError
       });
+      const filepath = `./public/images/${path.basename(item.imageUrl)}`
+      fs.unlink(filepath, (err) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
       return;
     } else {
       const itemExists = await Item.findOne({ name: req.body.name }).exec();
@@ -150,9 +164,10 @@ exports.item_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    let url;
+    let url, fileError;
     if (req.file){
       url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      fileError = fileValidation.auth(req)
     }
     
     const item = new Item({
@@ -165,14 +180,22 @@ exports.item_update_post = [
       _id: req.params.itemId
     });
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() || fileError) {
       const categories = await Category.find().exec()
       res.render("item_form", {
         title: "Create item",
         categories: categories,
         item: item,
+        fileError: fileError,
         errors: errors.array(),
       });
+      const filepath = `./public/images/${path.basename(item.imageUrl)}`
+      fs.unlink(filepath, (err) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
       return;
     } else {
       await Item.findByIdAndUpdate(req.params.itemId, item, {});
